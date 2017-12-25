@@ -1,7 +1,9 @@
 import React from 'react'
+import { Route } from 'react-router-dom'
 import * as BooksAPI from './BooksAPI'
 import './App.css'
 import ListBooks from './ListBooks'
+import SearchResult from './SearchResult'
 
 class BooksApp extends React.Component {
   state = {
@@ -23,7 +25,6 @@ class BooksApp extends React.Component {
   // initialize state when reload.
   componentDidMount(){
     BooksAPI.getAll().then((books) => {
-        console.log(books);
         let currentlyReading = []
         let read = []
         let wantToRead = []
@@ -47,41 +48,23 @@ class BooksApp extends React.Component {
   }
 
   moveToOtherShelf = (shelfName, book) => {
-    console.log(shelfName)
-    console.log(book.id)
-    console.log(this)
-    let bookId = book.id
     BooksAPI.update(book, shelfName).then((books)=>{
       this.setState(books)
+    })
+  }
+
+  searchBook = (searchContent) => {
+    BooksAPI.search(searchContent).then((books) => {
+      this.setState({
+        searchResult:books
+      })
     })
   }
 
   render() {
     return (
       <div className="app">
-        {this.state.showSearchPage ? (
-          <div className="search-books">
-            <div className="search-books-bar">
-              <a className="close-search" onClick={() => this.setState({ showSearchPage: false })}>Close</a>
-              <div className="search-books-input-wrapper">
-                {/*
-                  NOTES: The search from BooksAPI is limited to a particular set of search terms.
-                  You can find these search terms here:
-                  https://github.com/udacity/reactnd-project-myreads-starter/blob/master/SEARCH_TERMS.md
-
-                  However, remember that the BooksAPI.search method DOES search by title or author. So, don't worry if
-                  you don't find a specific author or title. Every search is limited by search terms.
-                */}
-                <input type="text" placeholder="Search by title or author"/>
-
-              </div>
-            </div>
-            <div className="search-books-results">
-              <ol className="books-grid"></ol>
-            </div>
-          </div>
-        ) : (
-
+        <Route exact path='/' render={() => (
           <ListBooks
             bookLists={this.state.bookLists}
             currentlyReading={this.state.currentlyReading}
@@ -89,8 +72,18 @@ class BooksApp extends React.Component {
             wantToRead={this.state.wantToRead}
             moveToOtherShelf={this.moveToOtherShelf}
           />
+        )}/>
 
-        )}
+        <Route path='/search' render={({ history }) => (
+          <SearchResult
+            searchBook={(searchContent) => {
+              this.searchBook(searchContent)
+            }}
+            listBooks={this.state.bookLists}
+            searchResult={this.state.searchResult}
+            moveToOtherShelf={this.moveToOtherShelf}
+          />
+      )}/>
       </div>
     )
   }

@@ -1,5 +1,7 @@
 import React, {Component} from 'react'
 import PropTypes from 'prop-types'
+import { Link } from 'react-router-dom'
+
 
 class ListBooks extends Component{
   static propType = {
@@ -26,22 +28,22 @@ class ListBooks extends Component{
               <ol className="books-grid">
                 {bookLists.filter((book) => currentlyReading.includes(book.id)).map((book) =>(
                   <li key={book.id}>
-                    <div className="book">
-                      <div className="book-top">
-                        <div className="book-cover" style={{ width: 128, height: 193, backgroundImage: `url(${book.imageLinks.smallThumbnail})` }}></div>
-                        <div className="book-shelf-changer">
-                          <select value="currentlyReading" onChange={(event) => moveToOtherShelf(event.target.value , book)}>
-                            <option value="none" disabled>Move to...</option>
-                            <option value="currentlyReading">Currently Reading</option>
-                            <option value="wantToRead">Want to Read</option>
-                            <option value="read">Read</option>
-                            <option value="none">None</option>
-                          </select>
-                        </div>
+                  <div className="book">
+                    <div className="book-top">
+                    <div className="book-cover" style={{ width: 128, height: 193, backgroundImage: (book != undefined && book.imageLinks!=undefined && book.imageLinks.smallThumbnail != undefined)&&(`url(${book.imageLinks.smallThumbnail})`) }}></div>
+                      <div className="book-shelf-changer">
+                        <select value="currentlyReading" onChange={(event) => moveToOtherShelf(event.target.value , book)}>
+                          <option value="none" disabled>Move to...</option>
+                          <option value="currentlyReading">Currently Reading</option>
+                          <option value="wantToRead">Want to Read</option>
+                          <option value="read">Read</option>
+                          <option value="none">None</option>
+                        </select>
                       </div>
-                      <div className="book-title">{book.title}</div>
-                      <div className="book-authors">{book.authors.join(" and ")}</div>
                     </div>
+                    <div className="book-title">{(book.title !== undefined)&&book.title}</div>
+                    <div className="book-authors">{(book.authors !== undefined)&& book.authors.join(" and ")}</div>
+                  </div>
                   </li>
                 ))
                 }
@@ -54,21 +56,22 @@ class ListBooks extends Component{
               <ol className="books-grid">
               {bookLists.filter((book) => wantToRead.includes(book.id)).map((book) =>(
                 <li key={book.id}>
-                  <div className="book">
-                    <div className="book-top">
-                      <div className="book-cover" style={{ width: 128, height: 193, backgroundImage: `url(${book.imageLinks.smallThumbnail})` }}></div>
-                      <div className="book-shelf-changer">
-                        <select value="wantToRead" onChange={(event) => moveToOtherShelf(event.target.value , book)}>
-                          <option value="currentlyReading">Currently Reading</option>
-                          <option value="wantToRead">Want to Read</option>
-                          <option value="read">Read</option>
-                          <option value="none">None</option>
-                        </select>
-                      </div>
+                <div className="book">
+                  <div className="book-top">
+                  <div className="book-cover" style={{ width: 128, height: 193, backgroundImage: (book != undefined && book.imageLinks!=undefined && book.imageLinks.smallThumbnail != undefined)&&(`url(${book.imageLinks.smallThumbnail})`) }}></div>
+                    <div className="book-shelf-changer">
+                      <select value="wantToRead" onChange={(event) => moveToOtherShelf(event.target.value , book)}>
+                        <option value="none" disabled>Move to...</option>
+                        <option value="currentlyReading">Currently Reading</option>
+                        <option value="wantToRead">Want to Read</option>
+                        <option value="read">Read</option>
+                        <option value="none">None</option>
+                      </select>
                     </div>
-                    <div className="book-title">{book.title}</div>
-                    <div className="book-authors">{book.authors.join(" and ")}</div>
                   </div>
+                  <div className="book-title">{(book.title !== undefined)&&book.title}</div>
+                  <div className="book-authors">{(book.authors !== undefined)&& book.authors.join(" and ")}</div>
+                </div>
                 </li>
               ))
               }
@@ -83,7 +86,7 @@ class ListBooks extends Component{
                 <li key={book.id}>
                   <div className="book">
                     <div className="book-top">
-                      <div className="book-cover" style={{ width: 128, height: 193, backgroundImage: `url(${book.imageLinks.smallThumbnail})` }}></div>
+                    <div className="book-cover" style={{ width: 128, height: 193, backgroundImage: (book != undefined && book.imageLinks!=undefined && book.imageLinks.smallThumbnail != undefined)&&(`url(${book.imageLinks.smallThumbnail})`) }}></div>
                       <div className="book-shelf-changer">
                         <select value="read" onChange={(event) => moveToOtherShelf(event.target.value , book)}>
                           <option value="none" disabled>Move to...</option>
@@ -94,8 +97,8 @@ class ListBooks extends Component{
                         </select>
                       </div>
                     </div>
-                    <div className="book-title">{book.title}</div>
-                    <div className="book-authors">{book.authors.join(" and ")}</div>
+                    <div className="book-title">{(book.title !== undefined)&&book.title}</div>
+                    <div className="book-authors">{(book.authors !== undefined)&& book.authors.join(" and ")}</div>
                   </div>
                 </li>
               ))
@@ -107,7 +110,9 @@ class ListBooks extends Component{
       </div>
 
       <div className="open-search">
-        <a onClick={() => this.setState({ showSearchPage: true })}>Add a book</a>
+        <Link
+          to='/search'
+        >Add a book</Link>
       </div>
       </div>
   )
