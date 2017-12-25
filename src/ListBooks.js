@@ -5,23 +5,13 @@ class ListBooks extends Component{
   static propType = {
     currentlyReading: PropTypes.array.isRequired,
     wantToRead: PropTypes.array.isRequired,
-    read: PropTypes.array.isRequired
+    read: PropTypes.array.isRequired,
+    bookLists: PropTypes.array.isRequired
   }
 
-  moveToOtherShelf(){
-
-  }
-
-  addToShelf(){
-    
-  }
-
-  deleteFromShelf(){
-
-  }
 
   render(){
-    const { currentlyReading, read, wantToRead } = this.props
+    const { bookLists, currentlyReading, read, wantToRead, moveToOtherShelf } = this.props
     return (
       <div className="list-books">
       <div className="list-books-title">
@@ -34,13 +24,13 @@ class ListBooks extends Component{
             <h2 className="bookshelf-title">Currently Reading</h2>
             <div className="bookshelf-books">
               <ol className="books-grid">
-                {currentlyReading.map((book) =>(
-                  <li>
+                {bookLists.filter((book) => currentlyReading.includes(book.id)).map((book) =>(
+                  <li key={book.id}>
                     <div className="book">
                       <div className="book-top">
                         <div className="book-cover" style={{ width: 128, height: 193, backgroundImage: `url(${book.imageLinks.smallThumbnail})` }}></div>
                         <div className="book-shelf-changer">
-                          <select>
+                          <select value="currentlyReading" onChange={(event) => moveToOtherShelf(event.target.value , book)}>
                             <option value="none" disabled>Move to...</option>
                             <option value="currentlyReading">Currently Reading</option>
                             <option value="wantToRead">Want to Read</option>
@@ -62,14 +52,13 @@ class ListBooks extends Component{
             <h2 className="bookshelf-title">Want to Read</h2>
             <div className="bookshelf-books">
               <ol className="books-grid">
-              {wantToRead.map((book) =>(
-                <li>
+              {bookLists.filter((book) => wantToRead.includes(book.id)).map((book) =>(
+                <li key={book.id}>
                   <div className="book">
                     <div className="book-top">
                       <div className="book-cover" style={{ width: 128, height: 193, backgroundImage: `url(${book.imageLinks.smallThumbnail})` }}></div>
                       <div className="book-shelf-changer">
-                        <select>
-                          <option value="none" disabled>Move to...</option>
+                        <select value="wantToRead" onChange={(event) => moveToOtherShelf(event.target.value , book)}>
                           <option value="currentlyReading">Currently Reading</option>
                           <option value="wantToRead">Want to Read</option>
                           <option value="read">Read</option>
@@ -90,13 +79,13 @@ class ListBooks extends Component{
             <h2 className="bookshelf-title">Read</h2>
             <div className="bookshelf-books">
               <ol className="books-grid">
-              {read.map((book) =>(
-                <li>
+              {bookLists.filter((book) => read.includes(book.id)).map((book) =>(
+                <li key={book.id}>
                   <div className="book">
                     <div className="book-top">
                       <div className="book-cover" style={{ width: 128, height: 193, backgroundImage: `url(${book.imageLinks.smallThumbnail})` }}></div>
                       <div className="book-shelf-changer">
-                        <select>
+                        <select value="read" onChange={(event) => moveToOtherShelf(event.target.value , book)}>
                           <option value="none" disabled>Move to...</option>
                           <option value="currentlyReading">Currently Reading</option>
                           <option value="wantToRead">Want to Read</option>

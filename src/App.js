@@ -16,7 +16,8 @@ class BooksApp extends React.Component {
     showSearchPage: false,
     currentlyReading: [],
     read: [],
-    wantToRead: []
+    wantToRead: [],
+    bookLists:[]
   }
 
   // initialize state when reload.
@@ -26,20 +27,32 @@ class BooksApp extends React.Component {
         let currentlyReading = []
         let read = []
         let wantToRead = []
+        let bookLists = []
         books.map(function(book){
+          bookLists.push(book)
           switch (book.shelf) {
           case 'currentlyReading':
-            currentlyReading.push(book);
+            currentlyReading.push(book.id);
             break;
           case 'read':
-            read.push(book);
+            read.push(book.id);
             break;
           case 'wantToRead':
-            wantToRead.push(book);
+            wantToRead.push(book.id);
             break;
           default:
         }})
-        this.setState({currentlyReading,read,wantToRead})
+        this.setState({currentlyReading,read,wantToRead,bookLists})
+    })
+  }
+
+  moveToOtherShelf = (shelfName, book) => {
+    console.log(shelfName)
+    console.log(book.id)
+    console.log(this)
+    let bookId = book.id
+    BooksAPI.update(book, shelfName).then((books)=>{
+      this.setState(books)
     })
   }
 
@@ -70,9 +83,11 @@ class BooksApp extends React.Component {
         ) : (
 
           <ListBooks
-            currentlyReading = {this.state.currentlyReading}
-            read = {this.state.read}
-            wantToRead = {this.state.wantToRead}
+            bookLists={this.state.bookLists}
+            currentlyReading={this.state.currentlyReading}
+            read={this.state.read}
+            wantToRead={this.state.wantToRead}
+            moveToOtherShelf={this.moveToOtherShelf}
           />
 
         )}
