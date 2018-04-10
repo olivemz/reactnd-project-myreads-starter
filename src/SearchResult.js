@@ -1,6 +1,7 @@
 import React, {Component} from 'react'
 import PropTypes from 'prop-types'
 import { Link } from 'react-router-dom'
+import { Debounce } from 'react-throttle'
 
 class SearchResult extends Component{
 
@@ -11,10 +12,8 @@ class SearchResult extends Component{
   }
 
   searchBook = (event) => {
-    if (event.key === 'Enter'){
-      if (this.props.searchBook)
-        this.props.searchBook(event.target.value)
-    }
+    if (this.props.searchBook)
+      this.props.searchBook(event.target.value)
   }
 
   checkBookShelf = (bookId) => {
@@ -44,7 +43,9 @@ class SearchResult extends Component{
               However, remember that the BooksAPI.search method DOES search by title or author. So, don't worry if
               you don't find a specific author or title. Every search is limited by search terms.
             */}
-            <input type="text" placeholder="Search by title or author" onKeyPress={(event => this.searchBook(event))}/>
+            <Debounce time="200" handler="onChange">
+                <input type="text" placeholder="Search by title or author" onChange={(event) => this.searchBook(event)}/>
+            </Debounce>
           </div>
         </div>
         <div className="search-books-results">
